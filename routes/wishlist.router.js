@@ -9,12 +9,12 @@ const { createWishlistHandler, deleteWishlistHandler, getWishlistHandler } = wis
 const router = express.Router();
 
 router.route("/")
-    .post(verifyUser, createWishlistHandler)
+    .post(createWishlistHandler)
 
 router.route("/:id")
     .delete(verifyUser, deleteWishlistHandler)
 
 router.route("/")
-    .get(verifyUser, getWishlistHandler)
+    .get(getWishlistHandler)
 
 module.exports = router;

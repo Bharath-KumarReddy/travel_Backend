@@ -2,23 +2,62 @@ const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
 const User = require("../model/user.model");
+// const intRedis = require('../client');
+// let client;
+const {intRedis} = require('../client')
+
+let {client} = require('../client');
+
 
 const loginHandler = async (req, res) => {
-    try{
-        const user = await User.findOne({ number: req.body.number });
-        !user && res.status(401).json({ message: "Incorrect Mobile Number" });
+    try {
+     
+        if(!client){
+            client = await intRedis();
+            console.log('redis client is not intialized');
+            console.log('now redis is initialized');
+         }
 
+        const { number, password } = req.body;
+    
+        const cachedUser = await client?.get(`user:${number}`);
+
+        let user;
+
+        if (cachedUser) {
+        
+            user = JSON.parse(cachedUser);
+        
+            user = await User.findOne({ number });
+
+            if (!user) {
+                return res.status(401).json({ message: "Incorrect Mobile Number" });
+            }
+
+         
+            await client?.set(`user:${number}`,JSON.stringify(user),{EX:3600});
+        }
+
+      
         const decodedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASSWORD_SECRET_KEY).toString(CryptoJS.enc.Utf8);
-        decodedPassword !== req.body.password && res.status(401).json({ message: "Incorrect Password"});
 
-        const { password, ...rest } = user._doc;
-        const accessToken = jwt.sign( {username: user.username}, process.env.ACCESS_TOKEN )
+        if (decodedPassword !== password) {
+            return res.status(401).json({ message: "Incorrect Password" });
+        }
 
-        res.json({...rest, accessToken});
+    
+        const { password: _, ...rest } = user._doc;
 
-    }catch(err){
-        console.log(err)
+   
+        const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN);
+
+        
+        res.json({ ...rest, accessToken });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 module.exports = loginHandler;

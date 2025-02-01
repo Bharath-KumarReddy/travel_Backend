@@ -15,17 +15,19 @@ const authRouter = require("./routes/auth.router");
 const wishlistRouter = require("./routes/wishlist.router");
 
 const connectDB = require("./config/dbconfig");
+const {intRedis} = require('./client')
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 connectDB();
+intRedis();
 
 const PORT = 3500;
 
 app.get("/", (req, res) => {
-  res.send("Hello Geeks");
+  res.send("Hello ALL");
 });
 
 app.use("/api/hoteldata", hotelDataAddedToDBRouter);

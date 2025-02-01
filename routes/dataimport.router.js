@@ -8,8 +8,13 @@ const router = express.Router();
 router.route("/")
     .post(async (req, res) => {
         try{
+             if (!client) {
+                client = await intRedis();
+            }
             // await Hotel.remove();
-            const hotelsInDB = await Hotel.insertMany(hotels.data);
+           const hotelsInDB = await Hotel.insertMany(hotels.data);
+        //    await client?.set('hotels', JSON.stringify(hotelsInDB));
+
             res.json(hotelsInDB)
         }catch(err){
             console.log(err);
