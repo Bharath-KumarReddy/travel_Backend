@@ -1,6 +1,4 @@
 const Wishlist = require("../model/wishlist.model");
-// const intRedis = require('../client');
-// let client;
 const {intRedis} = require('../client')
 
 let {client} = require('../client');
@@ -18,7 +16,7 @@ const createWishlistHandler = async (req, res) => {
         const newWishlist = new Wishlist(req.body);
         const savedWishlist = await newWishlist.save();
         const wishlist = await Wishlist.find({});
-        await client?.set('wishlist', JSON.stringify(wishlist),{EX:3600});  
+        await client?.set('wishlist', JSON.stringify(wishlist),{EX:3600});
 
         res.status(201).json(savedWishlist);
     } catch (err) {

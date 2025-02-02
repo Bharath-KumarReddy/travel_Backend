@@ -1,11 +1,12 @@
 const { createClient } = require('redis');
-
+const dotenv = require('dotenv')
+dotenv.config();
 let client;
 
 const intRedis = async () => {
     if (!client) {
         client = createClient({
-            url: 'redis://:mypassword@localhost:6379'
+            url: process.env.REDIS_URL
         });
 
         client.on('error', (err) => console.error('Error on creating Redis client:', err));
