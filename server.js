@@ -27,7 +27,7 @@ intRedis();
 const PORT = 3500;
 
 app.get("/", (req, res) => {
-  res.send("Hello ALL");
+  res.send("Hello ALL Server is Responding");
 });
 
 app.use("/api/hoteldata", hotelDataAddedToDBRouter);
