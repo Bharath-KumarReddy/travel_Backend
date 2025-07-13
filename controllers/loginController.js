@@ -39,7 +39,7 @@ const loginHandler = async (req, res) => {
         }
 
       
-        const decodedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASSWORD_SECRET_KEY).toString(CryptoJS.enc.Utf8);
+        const decodedPassword = CryptoJS.AES.decrypt(user.password,'bharathkumar').toString(CryptoJS.enc.Utf8);
 
         if (decodedPassword !== password) {
             return res.status(401).json({ message: "Incorrect Password" });
@@ -49,7 +49,7 @@ const loginHandler = async (req, res) => {
         const { password: _, ...rest } = user._doc;
 
    
-        const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN);
+        const accessToken = jwt.sign({ username: user.username },'MY_SUPER_SECRET_KEY');
 
         
         res.json({ ...rest, accessToken });
