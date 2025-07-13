@@ -39,7 +39,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/wishlist", wishlistRouter);
 
 mongoose.connection.once("open", () => {
-  console.log("Connected to DB");
+  console.log("✅ Connected to MonGoDB");
   app.listen(process.env.PORT || PORT, () => {
     console.log(`Server is Up and Running ${PORT}`);
   });
