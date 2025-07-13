@@ -37,7 +37,7 @@ const singupHandler = async (req, res) => {
             username: req.body.username,
             number: req.body.number,
             email: req.body.email,
-            password: CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_SECRET_KEY).toString()
+            password: CryptoJS.AES.encrypt(req.body.password, 'bharathkumar').toString()
         });
 
      
